@@ -5,17 +5,9 @@ set -e
 chmod -x /etc/update-motd.d/10-uname 2>/dev/null || true
 rm -f /etc/motd
 
-# Dienste interaktiv abfragen
-echo "Dienste für dieses System eintragen (leerer Name zum Beenden):"
-SERVICES_CONF="/etc/motd-services.conf"
-> "$SERVICES_CONF"
-
-while true; do
-  read -rp "Dienstname: " name
-  [ -z "$name" ] && break
-  read -rp "Pfad: " path
-  echo "${name}=${path}" >> "$SERVICES_CONF"
-done
+# Installationspfad abfragen
+read -rp "Installationspfad des Dienstes: " SERVICE_PATH
+echo "$SERVICE_PATH" > /etc/motd-service-path
 
 # Eigenes MOTD-Skript schreiben
 cat > /etc/update-motd.d/05-custom << 'MOTDSCRIPT'
@@ -41,11 +33,7 @@ echo "Virtual: $(systemd-detect-virt -q && echo YES || echo NO)"
 echo "CPUs:    $(nproc)"
 echo "RAM:     $(free -h --si | awk '/^Mem:/{print $2}')"
 echo ""
-echo "Dienste auf diesem Host:"
-while IFS='=' read -r name path; do
-  [ -z "$name" ] && continue
-  printf "  %-15s %s\n" "$name" "$path"
-done < /etc/motd-services.conf
+echo "Installiert unter: $(cat /etc/motd-service-path)"
 MOTDSCRIPT
 
 chmod +x /etc/update-motd.d/05-custom
