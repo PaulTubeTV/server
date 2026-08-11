@@ -1,15 +1,12 @@
 #!/bin/bash
 set -e
 
-# Standard-MOTD deaktivieren
 chmod -x /etc/update-motd.d/10-uname 2>/dev/null || true
 rm -f /etc/motd
 
-# Installationspfad abfragen
-read -rp "Installationspfad des Dienstes: " SERVICE_PATH
+read -rp "Installationspfad des Dienstes: " SERVICE_PATH < /dev/tty
 echo "$SERVICE_PATH" > /etc/motd-service-path
 
-# Eigenes MOTD-Skript schreiben
 cat > /etc/update-motd.d/05-custom << 'MOTDSCRIPT'
 #!/bin/bash
 cat << "EOF"
@@ -39,6 +36,3 @@ MOTDSCRIPT
 chmod +x /etc/update-motd.d/05-custom
 echo ""
 echo "Fertig. Test mit: run-parts /etc/update-motd.d/"
-
-# Setup-Skript selbst löschen
-rm -- "$0"
