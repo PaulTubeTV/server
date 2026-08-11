@@ -27,7 +27,7 @@ cat << "EOF"
 EOF
 
 echo ""
-echo "FQDN:    $(hostname -f)"
+echo "IP:      $(hostname -I | awk '{print $1}')"
 echo "Distro:  $(source /etc/os-release; echo $PRETTY_NAME)"
 echo "Virtual: $(systemd-detect-virt -q && echo YES || echo NO)"
 echo "CPUs:    $(nproc)"
