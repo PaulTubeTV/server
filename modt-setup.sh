@@ -39,3 +39,6 @@ MOTDSCRIPT
 chmod +x /etc/update-motd.d/05-custom
 echo ""
 echo "Fertig. Test mit: run-parts /etc/update-motd.d/"
+
+# Setup-Skript selbst löschen
+rm -- "$0"
