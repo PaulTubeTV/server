@@ -1,4 +1,4 @@
-# server-modt
+# Server Scripts
 
 Dieses Repository enthält ein kleines Shell-Skript zum Einrichten einer benutzerdefinierten Message of the Day (MOTD) auf einem Linux-Server.
 
