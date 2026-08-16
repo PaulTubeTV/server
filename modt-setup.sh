@@ -9,6 +9,8 @@ echo "$SERVICE_PATH" > /etc/motd-service-path
 
 cat > /etc/update-motd.d/05-custom << 'MOTDSCRIPT'
 #!/bin/bash
+echo "$(uname -a)"
+echo ""
 cat << "EOF"
       ___           ___           ___           ___                 
      /  /\         /  /\         /  /\         /__/|          ___   
