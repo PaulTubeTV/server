@@ -1,27 +1,27 @@
 # Server Scripts
 
-Dieses Repository enthält ein kleines Shell-Skript zum Einrichten einer benutzerdefinierten Message of the Day (MOTD) auf einem Linux-Server.
+Dieses Repository enthält nützliche Shell-Skripte zum Einrichten und Härten von Linux-Servern und Containern. Die Skripte sind für den Einsatz auf Debian-basierten Systemen bzw. in LXC-Containern gedacht und müssen in der Regel mit Root-Rechten ausgeführt werden.
 
-## Enthaltene Scripts
+Kurzbeschreibung
 
-- `modt-setup.sh`
+| Skript | Zweck | Kurzbeschreibung |
+|---|---|---|
+| `modt-setup.sh` | MOTD einrichten | Erzeugt `/etc/update-motd.d/05-custom`, speichert einen Service-Installationspfad in `/etc/motd-service-path` und zeigt beim Login eine ASCII-Überschrift sowie Systeminformationen (IP, Distribution, Virtualisierung, CPUs, RAM). Muss als Root ausgeführt werden. |
+| `harden-lxc.sh` | LXC-Container härten | Härtet einen frisch erstellten LXC-Container: setzt SSH so, dass Root-Login nur per Public-Key möglich ist (kein Passwort über SSH), behält das Root-Passwort für die Proxmox-Konsole bei und entfernt ggf. Autologin-Overrides. Muss innerhalb des Containers als Root laufen; prüft, ob `/root/.ssh/authorized_keys` vorhanden ist. |
+| `docker-setup.sh` | Docker installieren | Entfernt alte Docker-Pakete, fügt das offizielle Docker-APT-Repository hinzu, installiert Docker CE und zugehörige Komponenten und startet/aktiviert den Docker-Dienst. Geeignet für Debian-basierte Systeme; Ausführung als Root erforderlich. |
 
-  Beschreibung:
-  - Deaktiviert das vorhandene `/etc/update-motd.d/10-uname` (setzt das Ausführungsbit aus) und entfernt `/etc/motd`, sofern vorhanden.
-  - Fragt interaktiv nach dem Installationspfad des Dienstes (`Installationspfad des Dienstes:`) und speichert diesen Pfad in `/etc/motd-service-path`.
-  - Erzeugt das Skript `/etc/update-motd.d/05-custom`, das beim Login eine hübsche ASCII-Überschrift sowie folgende Systeminformationen anzeigt:
-    - IP-Adresse
-    - Distribution (PRETTY_NAME aus `/etc/os-release`)
-    - Ob das System virtualisiert ist
-    - Anzahl CPUs
-    - RAM-Größe
-    - Den zuvor gespeicherten Installationspfad
-  - Macht `/etc/update-motd.d/05-custom` ausführbar.
-  - Am Ende wird ein Hinweis ausgegeben, wie man die MOTD sofort testet: `run-parts /etc/update-motd.d/`.
+Verwendung
 
-  Hinweise zur Verwendung:
-  - Das Script verändert Dateien in `/etc/` und muss daher als Root (z. B. via `sudo`) ausgeführt werden.
-  - Es ist idempotent in dem Sinne, dass es bestehende Einträge überschreibt bzw. vorhandene Dateien entfernt/überschreibt.
-  - Testen: `run-parts /etc/update-motd.d/` zeigt die neue MOTD an.
+- Skripte ausführbar machen und als Root ausführen, z.B.:
 
-Wenn du möchtest, kann ich zusätzliche Erklärungen, Optionen oder ein Uninstall-Skript hinzufügen.
+```bash
+sudo bash modt-setup.sh
+sudo bash harden-lxc.sh    # innerhalb eines LXC-Containers
+sudo bash docker-setup.sh  # auf einem Debian-basierten Host
+```
+
+Hinweise
+
+- Die Skripte verändern Dateien in `/etc/` und sollten mit Vorsicht eingesetzt werden.
+- Vor allem bei `harden-lxc.sh`: unbedingt in einer neuen SSH-Sitzung testen, ob der Key-Login funktioniert, bevor die aktuelle Sitzung geschlossen wird.
+- Falls du möchtest, kann ich ein Uninstall-/Rollback-Skript oder zusätzliche Parameter und nicht-interaktive Optionen (z. B. für Automatisierung) hinzufügen.
