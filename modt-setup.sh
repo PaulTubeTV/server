@@ -24,6 +24,7 @@ cat << "EOF"
 EOF
 
 echo ""
+echo "------ $(hostname) ------"
 echo "IP:      $(hostname -I | awk '{print $1}')"
 echo "Distro:  $(source /etc/os-release; echo $PRETTY_NAME)"
 echo "Virtual: $(systemd-detect-virt -q && echo YES || echo NO)"
